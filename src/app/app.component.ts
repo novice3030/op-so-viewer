@@ -28,17 +28,14 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     this.sub = this.searchInputCtrl.valueChanges
       .pipe(
         debounceTime(300),
-        tap(() => {
-          if (!this.searchInputCtrl.value) {
-            this.selectedResult = null;
-            this.apiResult = null;
-          }
-        }),
         mergeMap(() =>
           this.stackoverflowApiService.queryTags(this.searchInputCtrl.value)
         )
       )
-      .subscribe(result => (this.apiResult = result));
+      .subscribe(result => {
+        this.apiResult = result;
+        this.selectedResult = null;
+      });
   }
 
   onItemClicked(item: any) {
